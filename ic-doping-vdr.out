@@ -1,0 +1,124 @@
+============================================================================
+ic-doping-vdr: Exact 1D PN Junction Simulator
+  All arithmetic on Q335 basis (D = 2^335)
+  Float64 comparison in parallel
+  Zero accumulated arithmetic error by construction
+============================================================================
+
+--- Device Configuration ---
+  Grid points:    20
+  Device length:  100 nm
+  Grid spacing:   5.2632e-09 m
+  Dopants:        5 acceptors (P-side) + 5 donors (N-side)
+  Doping level:   1e24 m^-3 (1e18 cm^-3)
+  Gummel iters:   10
+  Thermal voltage: 0.025852 V
+
+--- VDR Simulation (Q335 exact) ---
+  Gummel iteration...
+    Iteration 1/10 done (0.04 s)
+    Iteration 2/10 done (0.14 s)
+    Iteration 3/10 done (0.15 s)
+    Iteration 4/10 done (0.14 s)
+    Iteration 5/10 done (0.15 s)
+    Iteration 6/10 done (0.14 s)
+    Iteration 7/10 done (0.15 s)
+    Iteration 8/10 done (0.14 s)
+    Iteration 9/10 done (0.15 s)
+    Iteration 10/10 done (0.15 s)
+
+--- Float64 Mirror ---
+  Float64 done (0.0002 s)
+
+--- Test: Potential Antisymmetry ---
+  VDR antisymmetry (phi[i] + phi[N-1-i] = 0): BROKEN
+  Float antisymmetry max residual: 4.16e-16
+
+============================================================================
+SIMULATION REPORT: 1D PN Junction, Discrete Dopants
+============================================================================
+
+  Grid points:      20
+  Device:           100 nm symmetric PN junction
+  Dopants:          10 discrete (5 acceptor + 5 donor)
+  Gummel iters:     10
+  VDR time:         1.35 s
+  Float time:       0.0002 s
+
+----------------------------------------------------------------------------
+PER-ITERATION DRIFT (max over grid points)
+----------------------------------------------------------------------------
+  Iter    VDR max|phi| (V)    Float max|phi| (V)    Rel. Drift
+  ----    ----------------    ------------------    ----------
+     1        3.788125e-01          3.788125e-01      8.62e-16
+     2        3.726403e-01          3.726403e-01      2.07e-10
+     3        3.738869e-01          3.738869e-01      6.92e-11
+     4        3.736580e-01          3.736580e-01      1.08e-10
+     5        3.737008e-01          3.737008e-01      9.80e-11
+     6        3.736929e-01          3.736929e-01      1.00e-10
+     7        3.736944e-01          3.736944e-01      9.99e-11
+     8        3.736941e-01          3.736941e-01      1.00e-10
+     9        3.736941e-01          3.736941e-01      1.00e-10
+    10        3.736941e-01          3.736941e-01      1.00e-10
+
+----------------------------------------------------------------------------
+POTENTIAL PROFILE (final iteration)
+----------------------------------------------------------------------------
+    Node    x (nm)     VDR phi (V)     Float phi (V)     Drift
+   -----   ------    -------------    --------------    ------
+       0      0.0     0.000000e+00      0.000000e+00    0.00e+00
+       1      5.3    -1.002793e-01     -1.002793e-01    7.82e-11
+       2     10.5    -2.005587e-01     -2.005587e-01    7.82e-11
+       3     15.8    -3.008396e-01     -3.008396e-01    7.82e-11
+       4     21.1    -3.583513e-01     -3.583513e-01    8.77e-11
+       5     26.3    -3.736941e-01     -3.736941e-01    1.00e-10
+       6     31.6    -3.474133e-01     -3.474133e-01    8.42e-11
+       7     36.8    -2.787314e-01     -2.787314e-01    7.49e-11
+       8     42.1    -1.672386e-01     -1.672386e-01    7.49e-11
+       9     47.4    -5.574620e-02     -5.574620e-02    7.49e-11
+      10     52.6     5.574620e-02      5.574620e-02    7.49e-11
+      11     57.9     1.672386e-01      1.672386e-01    7.49e-11
+      12     63.2     2.787314e-01      2.787314e-01    7.49e-11
+      13     68.4     3.474133e-01      3.474133e-01    8.42e-11
+      14     73.7     3.736941e-01      3.736941e-01    1.00e-10
+      15     78.9     3.583513e-01      3.583513e-01    8.77e-11
+      16     84.2     3.008396e-01      3.008396e-01    7.82e-11
+      17     89.5     2.005587e-01      2.005587e-01    7.82e-11
+      18     94.7     1.002793e-01      1.002793e-01    7.82e-11
+      19    100.0     0.000000e+00      0.000000e+00    0.00e+00
+
+----------------------------------------------------------------------------
+SYMMETRY VERIFICATION
+----------------------------------------------------------------------------
+  VDR:   phi[i] + phi[N-1-i] = 0 for all i:  FAIL
+  Float: max |phi[i] + phi[N-1-i]|:           4.16e-16
+
+----------------------------------------------------------------------------
+DRIFT SUMMARY
+----------------------------------------------------------------------------
+  Max VDR-vs-float relative drift:  1.00e-10
+  Avg VDR-vs-float relative drift:  8.13e-11
+  VDR accumulated arithmetic error:  0 (exact)
+  VDR antisymmetry preserved:        No
+
+============================================================================
+INTERPRETATION
+============================================================================
+
+  The VDR result is the exact answer for this discretization.
+  The float result is the exact answer plus accumulated rounding.
+  The drift column shows how much of the float answer is arithmetic
+  noise vs physics.
+
+  If this drift is in the millivolt range, it contaminates the
+  threshold voltage prediction. At sub-3nm nodes where the total
+  Vth variability budget is ~10-50 mV, float arithmetic noise
+  consumes part of what engineers attribute to random dopant
+  fluctuation.
+
+  The symmetry test is definitive: a symmetric device MUST produce
+  antisymmetric potential. VDR preserves this exactly. Float breaks
+  it through asymmetric rounding accumulation in the Gummel loop.
+
+============================================================================
+
